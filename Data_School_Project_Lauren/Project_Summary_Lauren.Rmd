@@ -1,11 +1,11 @@
 ---
-title: A short title that describes your work
+title: Commissioning of Automated Control for the Coke Reactivity Test
 subtitle: 
-author:  Your Name
-affiliation: CSIRO Business Unit # Or group/team
-photo: resources/img/photo.jpeg
+author:  Lauren Williamson
+affiliation: CSIRO Mineral Resources # Or group/team
+photo: resources/img/photo.jpg
 
-short_title: Optional short title
+short_title: Automation of Coke Reactivity Test
 
 output: DSreport::project_summary
 ---
@@ -22,21 +22,63 @@ knitr::opts_chunk$set(
 library(tidyverse)
 library(gapminder)
 library(kableExtra)
+library(readxl)
+library(cowplot)
+library(lubridate)
+
+#setup tidy data
+
+#Read data from data/comissioning_data.xlsx. This file contains four sheets each of which contain the data from a 
+#single sample type. SR0204 is a high reactivty control sample, SR0190 is a low reactivity control sample SR0170 is a medium reactivity control sample and 
+#Other are test samples that have been included in project but may not be used for assessing the effect of process
+#automation on test results.The results for each sample include test results as well as process data. 
+
+SR0204_data<- read_excel("data/comissioning_data.xlsx",
+                         sheet="SR0204",
+                         col_names=TRUE,
+                         col_type=c("text","text","text","date","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","date","numeric","date","numeric","date","numeric","date","date","date","text")) #reads data in sheet SR0204 of the file comissioning_data.xlsx, column types have been specified to facilitate binding rows.
+
+SR0190_data<- read_excel("data/comissioning_data.xlsx",
+                         sheet="SR0190",
+                         col_names=TRUE,
+                         col_type=c("text","text","text","date","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","date","numeric","date","numeric","date","numeric","date","date","date","text")) #reads data in sheet SR0190 of the file comissioning_data.xlsx, column types have been specified to facilitate binding rows.
+
+SR0170_data<- read_excel("data/comissioning_data.xlsx",
+                         sheet="SR0170",
+                         col_names=TRUE,
+                         col_type=c("text","text","text","date","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","numeric","date","numeric","date","numeric","date","numeric","date","date","date","text")) #reads data in sheet SR0170 of the file comissioning_data.xlsx, column types have been specified to facilitate binding rows.
+
+#create a single data frame and add the following columns of test results test_number,final_mass,mass_loss,CRI and CSR. 
+
+all_data<- bind_rows(SR0204_data,SR0190_data,SR0170_data)%>% # binds four data frames SR0204_data, SR0190_data and SR0170 into a single data frame and assigns the variable all_data
+  mutate(test_number= row_number(), #Add a column that gives each line a unique identifier
+         final_mass= `Weight+10mm` + `Weight-10mm`, # calculates a new column called final_mass by adding `Weight+10mm` and `Weight-10mm`columns.
+         mass_loss=Weight_Out - final_mass, # calculates a new column called mass_loss by subracting Weight_out from final_mass
+         CRI= (((Weight_In-Weight_Out)/Weight_In)*100), #calculates a new column called CRI using formula ((Weight_In - Weight_Out)/Weight_In) *100
+         CSR= ((`Weight+10mm`/Weight_Out)*100))%>% #calculates a new column called CSR by using formula (`Weight+10mm`/Weight_Out)*100
+  view()#views the dataframe
+
+#Import data for example process plot 
+raw_process<-read_tsv("data/example_raw_test_data.prn",col_names=TRUE,skip=4)%>% #read data from file data/example_raw_test_data.prn, skipping the first 4 rows as they contain metadata, assigns dataframe to raw_process
+  mutate(elapsed = seconds(row_number()-1)) #adds column elapsed by numbering the rows, because we know that an observation has been taken every second for the duration of the test. 
 ```
 
 
 # Introduction
-Introduce *yourself*. What's your background? Could you code before Data School? What did your 
-daily work pattern look like before Data School? Etc. This section will be placed in 
-an introductory block at the top of the page separate from the rest of the content. Don't change the section title from "Introduction" otherwise this process won't work correctly.
+I am a Senior Research Scientist in the Coke Making Team at QCAT, Pullenvale in QLD. My team operates two pilot scale coke ovens and characterises the coke that we produce to support metallurgical coal producers with their metallurgical coal marketing efforts. My team deals with quite a large amount of data in excel to facilate the reporting of process data and coke test results.Prior to data school I had no experience in coding in R. 
 
 # My Project
-Rather than yourself, this is the space to introduce your **project**. What are 
-your goals, what was your data, how do you plan to work with it? Perhaps show some example data if 
-it would help.
+<div class= "col-md-6"> 
+The Coke Reactivity Test is routinely carried out at QCAT by the coke making team to assess the quality of coke produced in the Resreach Coke Oven and Non Recovery Coke Oven. The Coke Reactivity Test produces the indices Coke Reactivity Index (CRI) and Coke Strength after Reaction (CSR). The indices indicate the behavior of coke in the iron-making blast furnace. A coke that has a low CRI and high CSR is highly regarded in the market.
 
-In order to build this demo poster correctly, you will also need to have installed the `tidyverse`, 
-`gapminder`, and `kableExtra` packages.
+My project is to validate the implementation of automated temperature control for the Coke Reactivity Test. The questions that we set out to answer through validation testing was; Is there an improvement in the repeatability of the test results? and Is there a difference in the test results between manual and automated control?
+
+The data collected for this project was both test result data recorded in excel and process data extracted from the control system. The process data had already been manipulated and important process variables such as temperature, recorded in excel. 
+</div>
+<div class="col-md-6"> 
+![](resources/img/DanCSR.jpg){width=220px}
+</div>
+<!-- I'd like to fix the centring of this image to the middle of the column. Also the preliminary results show in the col unless the picture size is alre enough. strangely. --> 
 
 ## Preliminary results
 
