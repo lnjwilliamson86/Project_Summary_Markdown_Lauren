@@ -63,34 +63,30 @@ raw_process<-read_tsv("data/example_raw_test_data.prn",col_names=TRUE,skip=4)%>%
   mutate(elapsed = seconds(row_number()-1)) #adds column elapsed by numbering the rows, because we know that an observation has been taken every second for the duration of the test. 
 ```
 
-
 # Introduction
-I am a Senior Research Scientist in the Coke Making Team at QCAT, Pullenvale in QLD. My team operates two pilot scale coke ovens and characterises the coke that we produce to support metallurgical coal producers with their metallurgical coal marketing efforts. My team deals with quite a large amount of data in excel to facilate the reporting of process data and coke test results.Prior to data school I had no experience in coding in R. 
+I am a Senior Research Scientist in the Coke Making Team at QCAT, Pullenvale in QLD. My team operates two pilot scale coke ovens and characterises the coke that we produce to support metallurgical coal producers with their metallurgical coal marketing efforts. My team deals with quite a large amount of data in excel to facilate the reporting of process data and coke test results. Prior to data school I had no experience in coding in R. 
 
 # My Project
-<div class= "col-md-6"> 
-The Coke Reactivity Test is routinely carried out at QCAT by the coke making team to assess the quality of coke produced in the Resreach Coke Oven and Non Recovery Coke Oven. The Coke Reactivity Test produces the indices Coke Reactivity Index (CRI) and Coke Strength after Reaction (CSR). The indices indicate the behavior of coke in the iron-making blast furnace. A coke that has a low CRI and high CSR is highly regarded in the market.
+<div class= "col-md-8"> 
+The Coke Reactivity Test is routinely carried out at QCAT by the coke making team to assess the quality of coke produced in the Research Coke Oven and Non Recovery Coke Oven. 
 
-My project is to validate the implementation of automated temperature control for the Coke Reactivity Test. The questions that we set out to answer through validation testing was; Is there an improvement in the repeatability of the test results? and Is there a difference in the test results between manual and automated control?
+A sample of coke is reacted with Carbon Dioxide for a period of two hours at a temperature of 1100oC, The mass loss is indicated by Coke reactivity Index (CRI). The sample is then tumbled to determine the Coke Strength afte Reaction (CSR) which is the mass of coke that remains greater than 10mm in size. The indices indicate the behavior of coke in the iron-making blast furnace. A coke that has a low CRI and high CSR is highly regarded in the market.
+
+My project is to validate the implementation of automated temperature control for the Coke Reactivity Test. ***The questions that we set out to answer through validation testing were; Is there an improvement in the repeatability of the test results? and Is there a difference in the test results between manual and automated control?***
 
 The data collected for this project was both test result data recorded in excel and process data extracted from the control system. The process data had already been manipulated and important process variables such as temperature, recorded in excel. 
 </div>
-<div class="col-md-6"> 
+
+<div class= "col-md-4"> 
 ![](resources/img/DanCSR.jpg){width=220px}
 </div>
-<!-- I'd like to fix the centring of this image to the middle of the column. Also the preliminary results show in the col unless the picture size is alre enough. strangely. --> 
+
+<!-- I'd like to fix the centring of this image to the middle of the column. Also the preliminary results show in the col unless the picture size is large enough. strangely. --> 
 
 ## Preliminary results
+Three coke samples with different reactivity were inlcuded in the validation program. Figure \@ref(fig:CRI-vs-CSR-plot)(below) shows the distinct groupings of results, at first glance it also shows that the grouping of results for tests run in automated mode are tighter, idicating that the autoamted method improves the repeatability of the results. 
 
-This section will demonstrate the different visuals you might want use to show off your 
-project. Don't feel the need to go overboard, this is supposed to give a taste of the work you are
-doing rather than being a publication ready document.
-
-To get tables formatting correctly, use `knitr::kable` to convert the table to html format. If
-you also want to have alternate row highlighting, pass the result to `kable_styling('striped')` 
-from the `kableExtra` package.
-
-```{r standard-plot, out.width='60%', fig.align='center', fig.height= 4, fig.width=6, fig.cap="CRI vS CSR for Control Samples"}
+```{r CRI-vs-CSR-plot, out.width='60%', fig.align='center', fig.height= 4, fig.width=6, fig.cap="CRI vS CSR for Control Samples"}
 ggplot (data=all_data, 
         mapping=aes(x= CRI,
                     y= CSR,
@@ -102,32 +98,7 @@ ggplot (data=all_data,
   theme(legend.position = "bottom")+
   labs(caption= "The green line represents the relationship CSR= 100.34 -1.34*CRI (Koval, Sakurovs & Hockings 2018)")
 ```
-
-**Tables**
-```{r mytable, out.width='100%', echo = T}
-knitr::kable(head(gapminder, n = 5), format = "html", caption = "A table of data") %>% 
-  kable_styling("striped")
-```
-
-**Images from a file**
-
-![](resources/img/tidyverse.png){width=100px}
-
-**Plots from R**
-```{r standard-plot, out.width='60%', fig.align='center', fig.height= 4, fig.width=6, fig.cap="Yet another gapminder plot"}
-gapminder %>% 
-  filter(year == 1987) %>% 
-  ggplot(aes(x = gdpPercap, y = lifeExp, colour = continent, size = pop)) +
-  geom_point() +
-  scale_x_log10(labels = function(b) format(b, scientific = F)) +
-  scale_size(trans = "sqrt", guide = "none") +
-  scale_color_brewer(palette = "Set1") +
-  theme_linedraw() +
-  theme(legend.position = "bottom")
-```
-
-Your figure and table captions are automatically numbered and can be referenced in the text
-if needed: see eg. Table \@ref(tab:mytable) and Figure \@ref(fig:standard-plot)
+Statistical Analysis of the results data shows: something.... I need to do some analysis on the results data. Initally i was thinking of doing a difference between the two means for each of the control samples. 
 
 # My Digital Toolbox
 
@@ -166,3 +137,26 @@ been applying the skills you have learned in your daily work? Have you been able
 knowledge to your team members? Concrete examples demonstrating this would be useful here
 (meetings/talks/collaborations/new roles). Any descriptions of the personal impact the program has 
 had are welcome here as well!
+
+```{r Process-data-plot, out.width='60%', fig.align='center', fig.height= 4, fig.width=6, fig.cap="Example process plot"}
+ggplot (data=raw_process, 
+        mapping=aes(x= elapsed,
+        y= Sample_Temp)) +
+  geom_point()+
+  geom_hline(aes(yintercept=1097),colour= "red")+
+  geom_hline(aes(yintercept=1103),colour= "red")+
+  ylim(600,1200)+
+  labs(x="Time Elapsed (Seconds)", y="Sample Temperature oC",caption = "Temperature control limits indicated by red lines")
+
+```
+
+```{r splot, out.width='60%', fig.align='center', fig.height= 4, fig.width=6, fig.cap="Yet another gapminder plot"}
+gapminder %>% 
+  filter(year == 1987) %>% 
+  ggplot(aes(x = gdpPercap, y = lifeExp, colour = continent, size = pop)) +
+  geom_point() +
+  scale_x_log10(labels = function(b) format(b, scientific = F)) +
+  scale_size(trans = "sqrt", guide = "none") +
+  scale_color_brewer(palette = "Set1") +
+  theme_linedraw() +
+  theme(legend.position = "bottom")
