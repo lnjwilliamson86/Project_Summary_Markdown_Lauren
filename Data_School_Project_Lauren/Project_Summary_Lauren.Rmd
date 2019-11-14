@@ -104,7 +104,7 @@ Statistical Analysis of the results data shows: something.... I need to do some 
 
 # My Digital Toolbox
 
-Throughout the course of Data School I have learned to use the Tidyverse and the packages within it (e.g.dplyr,readr and tidyr) as well as readxl to import and manipluate data. I have also used ggplot2 to visualise my data. 
+Throughout the course of Data School I have learned to use the Tidyverse and the packages within it (e.g.dplyr,readr and tidyr) as well as readxl to import and manipluate data. I have also used ggplot2 to visualise my data. Additionally I have learnt how to use of Git and Github to track changes and collaborate on R projects.
 
 # My time went ...
 
@@ -118,7 +118,7 @@ I'd like to develop my skills in R coding further and utilise R to conduct data 
 
 I have enjoyed the experience of learning in a supportive and collaborative environment with people so willing to share their skills, the other really wonderful aspect of data school is that it brings together a diverse group of people from across the country and organisation. I have also  appreciated the opportunity to spend dedicated time on learning a skill that will set me up for success as a reasearcher and team leader. 
 
-# This is a cool plot that I may/may nor decide to incorporate
+# This is a cool plot that I may/may not decide to incorporate
 ```{r Process-data-plot, out.width='60%', fig.align='center', fig.height= 4, fig.width=6, fig.cap="Example process plot"}
 ggplot (data=raw_process, 
         mapping=aes(x= elapsed,
