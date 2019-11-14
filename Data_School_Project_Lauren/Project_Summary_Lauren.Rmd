@@ -68,6 +68,7 @@ I am a Senior Research Scientist in the Coke Making Team at QCAT, Pullenvale in 
 
 # My Project
 <div class= "col-md-8"> 
+
 The Coke Reactivity Test is routinely carried out at QCAT by the coke making team to assess the quality of coke produced in the Research Coke Oven and Non Recovery Coke Oven. 
 
 A sample of coke is reacted with Carbon Dioxide for a period of two hours at a temperature of 1100oC, The mass loss is indicated by Coke reactivity Index (CRI). The sample is then tumbled to determine the Coke Strength afte Reaction (CSR) which is the mass of coke that remains greater than 10mm in size. The indices indicate the behavior of coke in the iron-making blast furnace. A coke that has a low CRI and high CSR is highly regarded in the market.
@@ -84,6 +85,7 @@ The data collected for this project was both test result data recorded in excel 
 <!-- I'd like to fix the centring of this image to the middle of the column. Also the preliminary results show in the col unless the picture size is large enough. strangely. --> 
 
 ## Preliminary results
+
 Three coke samples with different reactivity were inlcuded in the validation program. Figure \@ref(fig:CRI-vs-CSR-plot)(below) shows the distinct groupings of results, at first glance it also shows that the grouping of results for tests run in automated mode are tighter, idicating that the autoamted method improves the repeatability of the results. 
 
 ```{r CRI-vs-CSR-plot, out.width='60%', fig.align='center', fig.height= 4, fig.width=6, fig.cap="CRI vS CSR for Control Samples"}
@@ -98,46 +100,25 @@ ggplot (data=all_data,
   theme(legend.position = "bottom")+
   labs(caption= "The green line represents the relationship CSR= 100.34 -1.34*CRI (Koval, Sakurovs & Hockings 2018)")
 ```
-Statistical Analysis of the results data shows: something.... I need to do some analysis on the results data. Initally i was thinking of doing a difference between the two means for each of the control samples. 
+Statistical Analysis of the results data shows: something.... I need to do some analysis on the results data. Initally i was thinking of doing a difference between the two means for each of the control samples but perhaps there is a different method that will be applicable. 
 
 # My Digital Toolbox
 
-What digital tools have you been using in your project? Which ones have you learned since starting 
-Data School?
-
-You can use all the usual R markdown features in writing a project summary, including lists:
-
-* R - dplyr, ggplot, ...
-* Python
-* SQL
-
-## Favourite tool (optional)
-
-Is there a tool/package/function in particular that you've enjoyed using? Give it a special shout out here.
-
-![](https://raw.githubusercontent.com/tidyverse/ggplot2/master/man/figures/logo.png){.pull-right width=100px}
-
-No prizes for guessing mine:
+Throughout the course of Data School I have learned to use the Tidyverse and the packages within it (e.g.dplyr,readr and tidyr) as well as readxl to import and manipluate data. I have also used ggplot2 to visualise my data. 
 
 # My time went ...
 
-What parts of the project took the most time and effort? Were there any surprising challenges you
-encountered, and how did you solve them?
+I spent quite a bit of time tidying and joinging my data into a single dataframe using the `bind_rows()` and `separate()` functions. I also added additional colums of calculated results data using the `mutate()` function. I found it most challenging to deal with time series data, using the Lubridate package. 
 
 # Next steps
 
-What further steps do you wish your project could take? Or are there any new digital skills that you
-are keen to develop as a result of your involvement in the Data School?
+I'd like to develop my skills in R coding further and utilise R to conduct data analysis and to generate plots in future research projects. I'm also interested in using R to make it easier and quicker to plot and present untidy data collected by my team. 
 
 # My Data School Experience
 
-This poster is mostly about your synthesis project. However we would also like to hear about other
-parts of your Data School experience. What aspects of the program did you really enjoy? How have you
-been applying the skills you have learned in your daily work? Have you been able to transfer this 
-knowledge to your team members? Concrete examples demonstrating this would be useful here
-(meetings/talks/collaborations/new roles). Any descriptions of the personal impact the program has 
-had are welcome here as well!
+I have enjoyed the experience of learning in a supportive and collaborative environment with people so willing to share their skills, the other really wonderful aspect of data school is that it brings together a diverse group of people from across the country and organisation. I have also  appreciated the opportunity to spend dedicated time on learning a skill that will set me up for success as a reasearcher and team leader. 
 
+# This is a cool plot that I may/may nor decide to incorporate
 ```{r Process-data-plot, out.width='60%', fig.align='center', fig.height= 4, fig.width=6, fig.cap="Example process plot"}
 ggplot (data=raw_process, 
         mapping=aes(x= elapsed,
@@ -149,14 +130,3 @@ ggplot (data=raw_process,
   labs(x="Time Elapsed (Seconds)", y="Sample Temperature oC",caption = "Temperature control limits indicated by red lines")
 
 ```
-
-```{r splot, out.width='60%', fig.align='center', fig.height= 4, fig.width=6, fig.cap="Yet another gapminder plot"}
-gapminder %>% 
-  filter(year == 1987) %>% 
-  ggplot(aes(x = gdpPercap, y = lifeExp, colour = continent, size = pop)) +
-  geom_point() +
-  scale_x_log10(labels = function(b) format(b, scientific = F)) +
-  scale_size(trans = "sqrt", guide = "none") +
-  scale_color_brewer(palette = "Set1") +
-  theme_linedraw() +
-  theme(legend.position = "bottom")
