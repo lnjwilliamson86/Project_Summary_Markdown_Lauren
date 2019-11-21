@@ -50,13 +50,14 @@ SR0170_data<- read_excel("data/comissioning_data.xlsx",
 
 #create a single data frame and add the following columns of test results test_number,final_mass,mass_loss,CRI and CSR. 
 
-all_data<- bind_rows(SR0204_data,SR0190_data,SR0170_data)%>% # binds four data frames SR0204_data, SR0190_data and SR0170 into a single data frame and assigns the variable all_data
+all_data<- bind_rows(SR0204_data,SR0190_data,SR0170_data,other_data)%>% # binds four data frames SR0204_data, SR0190_data, SR0170 and other_data into a single data frame and assigns the variable all_data
   mutate(test_number= row_number(), #Add a column that gives each line a unique identifier
          final_mass= `Weight+10mm` + `Weight-10mm`, # calculates a new column called final_mass by adding `Weight+10mm` and `Weight-10mm`columns.
          mass_loss=Weight_Out - final_mass, # calculates a new column called mass_loss by subracting Weight_out from final_mass
          CRI= (((Weight_In-Weight_Out)/Weight_In)*100), #calculates a new column called CRI using formula ((Weight_In - Weight_Out)/Weight_In) *100
-         CSR= ((`Weight+10mm`/Weight_Out)*100))%>% #calculates a new column called CSR by using formula (`Weight+10mm`/Weight_Out)*100
-  view()#views the dataframe
+         CSR= ((`Weight+10mm`/Weight_Out)*100), #calculates a new column called CSR by using formula (`Weight+10mm`/Weight_Out)*100
+         PID_response= (time_return_range - Runtime_switch_CO2))%>%
+   view()#views the dataframe
 
 #Import data for example process plot 
 raw_process<-read_tsv("data/example_raw_test_data.prn",col_names=TRUE,skip=4)%>% #read data from file data/example_raw_test_data.prn, skipping the first 4 rows as they contain metadata, assigns dataframe to raw_process
@@ -64,7 +65,7 @@ raw_process<-read_tsv("data/example_raw_test_data.prn",col_names=TRUE,skip=4)%>%
 ```
 
 # Introduction
-I am a Senior Research Scientist in the Coke Making Team at QCAT, Pullenvale in QLD. My team operates two pilot scale coke ovens and characterises the coke that we produce to support metallurgical coal producers with their metallurgical coal marketing efforts. My team deals with quite a large amount of data in excel to facilate the reporting of process data and coke test results. Prior to data school I had no experience in coding in R. 
+I am a Senior Research Scientist in the Coke Making Team at QCAT in QLD. My team operates two pilot scale coke ovens and characterises the coke that we produce to support metallurgical coal producers with their marketing efforts. My team deals with quite a large amount of data in excel to facilate the reporting of process data and coke test results to our client. Prior to data school I had no experience in coding in R. 
 
 # My Project
 <div class= "col-md-8"> 
@@ -108,11 +109,11 @@ Throughout the course of Data School I have learned to use the Tidyverse and the
 
 # My time went ...
 
-I spent quite a bit of time tidying and joinging my data into a single dataframe using the `bind_rows()` and `separate()` functions. I also added additional colums of calculated results data using the `mutate()` function. I found it most challenging to deal with time series data, using the Lubridate package. 
+I spent quite a bit of time tidying and joinging my data into a single dataframe using the `bind_rows()`functions. I also added additional colums of calculated results data using the `mutate()` function. I found it most challenging to deal with time series data, using the Lubridate package. 
 
 # Next steps
 
-I'd like to develop my skills in R coding further and utilise R to conduct data analysis and to generate plots in future research projects. I'm also interested in using R to make it easier and quicker to plot and present untidy data collected by my team. 
+I'd like to develop my skills in R coding further and utilise R to conduct data analysis and to generate plots in future research projects. I'm also interested in using R to make it easier and quicker to plot and present untidy data collected by my team to monitor equipment. 
 
 # My Data School Experience
 
