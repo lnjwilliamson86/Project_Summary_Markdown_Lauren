@@ -1,8 +1,8 @@
 ---
-title: Commissioning of Automated Control for the Coke Reactivity Test
-subtitle: 
+title:  Automated Control for the Coke Reactivity Test
+subtitle: Commissioning Data
 author:  Lauren Williamson
-affiliation: CSIRO Mineral Resources # Or group/team
+affiliation: CSIRO Mineral Resources 
 photo: resources/img/photo.jpg
 
 short_title: Automation of Coke Reactivity Test
@@ -50,13 +50,13 @@ SR0170_data<- read_excel("data/comissioning_data.xlsx",
 
 #create a single data frame and add the following columns of test results test_number,final_mass,mass_loss,CRI and CSR. 
 
-all_data<- bind_rows(SR0204_data,SR0190_data,SR0170_data,other_data)%>% # binds four data frames SR0204_data, SR0190_data, SR0170 and other_data into a single data frame and assigns the variable all_data
+all_data<- bind_rows(SR0204_data,SR0190_data,SR0170_data)%>% # binds three data frames SR0204_data, SR0190_data and SR0170 into a single data frame and assigns the variable all_data
   mutate(test_number= row_number(), #Add a column that gives each line a unique identifier
          final_mass= `Weight+10mm` + `Weight-10mm`, # calculates a new column called final_mass by adding `Weight+10mm` and `Weight-10mm`columns.
          mass_loss=Weight_Out - final_mass, # calculates a new column called mass_loss by subracting Weight_out from final_mass
          CRI= (((Weight_In-Weight_Out)/Weight_In)*100), #calculates a new column called CRI using formula ((Weight_In - Weight_Out)/Weight_In) *100
          CSR= ((`Weight+10mm`/Weight_Out)*100), #calculates a new column called CSR by using formula (`Weight+10mm`/Weight_Out)*100
-         PID_response= (time_return_range - Runtime_switch_CO2))%>%
+         PID_response= (time_return_range - Runtime_switch_CO2))%>% # calculates a new column called PID_Response by subracting the time that the sample temperatured returned to the range and the time that the sample atmosphere swtiched to CO2
    view()#views the dataframe
 
 #Import data for example process plot 
@@ -65,29 +65,41 @@ raw_process<-read_tsv("data/example_raw_test_data.prn",col_names=TRUE,skip=4)%>%
 ```
 
 # Introduction
-I am a Senior Research Scientist in the Coke Making Team at QCAT in QLD. My team operates two pilot scale coke ovens and characterises the coke that we produce to support metallurgical coal producers with their marketing efforts. My team deals with quite a large amount of data in excel to facilate the reporting of process data and coke test results to our client. Prior to data school I had no experience in coding in R. 
+I am a Senior Research Scientist in the Coke Making Team at QCAT in QLD. My team operates two pilot scale coke ovens and characterises the coke that we produce to support metallurgical coal producers with their marketing efforts. My team deals with quite a large amount of data in excel to facilitate the reporting of process data and coke test results to our clients. Prior to data school I had no experience in coding in R. 
 
 # My Project
 <div class= "col-md-8"> 
 
 The Coke Reactivity Test is routinely carried out at QCAT by the coke making team to assess the quality of coke produced in the Research Coke Oven and Non Recovery Coke Oven. 
 
-A sample of coke is reacted with Carbon Dioxide for a period of two hours at a temperature of 1100oC, The mass loss is indicated by Coke reactivity Index (CRI). The sample is then tumbled to determine the Coke Strength afte Reaction (CSR) which is the mass of coke that remains greater than 10mm in size. The indices indicate the behavior of coke in the iron-making blast furnace. A coke that has a low CRI and high CSR is highly regarded in the market.
+A 20mm sample of coke is reacted with Carbon Dioxide for a period of two hours at a temperature of 1100oC, The mass loss is indicated by the Coke Reactivity Index (CRI). The sample is then tumbled to determine the Coke Strength after Reaction (CSR) which is the mass of coke that remains greater than 10mm in size. The indices indicate the behavior of coke in the iron-making blast furnace. A coke that has a low CRI and high CSR is highly regarded in the market.
 
 My project is to validate the implementation of automated temperature control for the Coke Reactivity Test. ***The questions that we set out to answer through validation testing were; Is there an improvement in the repeatability of the test results? and Is there a difference in the test results between manual and automated control?***
 
-The data collected for this project was both test result data recorded in excel and process data extracted from the control system. The process data had already been manipulated and important process variables such as temperature, recorded in excel. 
+The data collected for this project was both test result data recorded in excel and process data extracted from the control system as a text file. Figure \@ref(fig:Process-data-plot) shows the temperature of the sample over the length of the test, the temperature must be controlled within a tight range which is why a PID control system is useful.
 </div>
 
-<div class= "col-md-4"> 
-![](resources/img/DanCSR.jpg){width=220px}
+<div class= "col-md-4">  
+![](resources/img/DanCSR.jpg){width=220px, out.extra='frontpage'}
 </div>
 
-<!-- I'd like to fix the centring of this image to the middle of the column. Also the preliminary results show in the col unless the picture size is large enough. strangely. --> 
+```{r Process-data-plot, out.width='60%', fig.align='center', fig.height= 4, fig.width=6, fig.cap="Example process plot"}
+ggplot (data=raw_process, 
+        mapping=aes(x= elapsed,
+        y= Sample_Temp)) +
+  geom_point(colour= "dark blue", size = 1)+
+  geom_hline(aes(yintercept=1097),colour= "red")+
+  geom_hline(aes(yintercept=1103),colour= "red")+
+  ylim(600,1200)+
+  theme_linedraw() +
+  theme(legend.position = "bottom")+
+  labs(x="Time Elapsed (Seconds)", y="Sample Temperature oC",caption = "Temperature control limits indicated by red lines")
+
+```
 
 ## Preliminary results
 
-Three coke samples with different reactivity were inlcuded in the validation program. Figure \@ref(fig:CRI-vs-CSR-plot)(below) shows the distinct groupings of results, at first glance it also shows that the grouping of results for tests run in automated mode are tighter, idicating that the autoamted method improves the repeatability of the results. 
+Three coke samples with different reactivity were included in the validation program. Figure \@ref(fig:CRI-vs-CSR-plot) (below) shows the distinct groupings of results, at first glance it also shows that the grouping of results for tests run in automated mode are tighter, indicating that the automated method improves the repeatability of the results. A student's t- test should be used to determine if the differences in the means of the CRI and CSR between the automated and manual methods for each sample are significant. 
 
 ```{r CRI-vs-CSR-plot, out.width='60%', fig.align='center', fig.height= 4, fig.width=6, fig.cap="CRI vS CSR for Control Samples"}
 ggplot (data=all_data, 
@@ -98,36 +110,34 @@ ggplot (data=all_data,
   geom_abline(aes(intercept=100.34,slope=-1.34), colour = "dark green")+
   scale_color_brewer(palette = "Set1") +
   theme_linedraw() +
-  theme(legend.position = "bottom")+
-  labs(caption= "The green line represents the relationship CSR= 100.34 -1.34*CRI (Koval, Sakurovs & Hockings 2018)")
+  theme(legend.position = "bottom") +
+  labs(caption= "The green line represents the relationship CSR= 100.34 -1.34*CRI (Koval, Sakurovs & Hockings 2018)") 
 ```
-Statistical Analysis of the results data shows: something.... I need to do some analysis on the results data. Initally i was thinking of doing a difference between the two means for each of the control samples but perhaps there is a different method that will be applicable. 
+Further plotting in Figure \@ref(fig:CRI-vs-CSR-plot-operator) (below) showed that there is an operator effect, this is not an unexpected finding as in the manual method the temperature is controlled by the operator. An additional source of variation in test results between a single coke is sample selection. 
 
+```{r CRI-vs-CSR-plot-operator, out.width='60%', fig.align='center', fig.height= 4, fig.width=6, fig.cap="CRI vS CSR for Control Samples by operator"}
+ggplot (data=all_data, 
+        mapping=aes(x= CRI,
+        y= CSR,
+        colour=Operator)) +
+  geom_point(aes(shape=Mode),size=2) + 
+  scale_color_brewer(palette = "Set2") +
+  theme_linedraw() +
+  theme(legend.position = "bottom")
+```
 # My Digital Toolbox
 
-Throughout the course of Data School I have learned to use the Tidyverse and the packages within it (e.g.dplyr,readr and tidyr) as well as readxl to import and manipluate data. I have also used ggplot2 to visualise my data. Additionally I have learnt how to use of Git and Github to track changes and collaborate on R projects.
+Throughout the course of Data School I have learned to use the Tidyverse and the packages within it (e.g.dplyr, readr and tidyr) as well as readxl to import and manipulate data. I have also used ggplot2 to visualise my data. Additionally I have learnt how to use of Git and Github to track changes and collaborate on R projects. I also discovered a fun function called `beep()` that makes a noise when a script has sucessfully executed. 
 
 # My time went ...
 
-I spent quite a bit of time tidying and joinging my data into a single dataframe using the `bind_rows()`functions. I also added additional colums of calculated results data using the `mutate()` function. I found it most challenging to deal with time series data, using the Lubridate package. 
+I spent quite a bit of time tidying and joining my data into a single data frame using the `bind_rows()` functions. I also added additional columns of calculated results data using the `mutate()` function. I found it most challenging to deal with time series data, using the Lubridate package. 
 
 # Next steps
 
-I'd like to develop my skills in R coding further and utilise R to conduct data analysis and to generate plots in future research projects. I'm also interested in using R to make it easier and quicker to plot and present untidy data collected by my team to monitor equipment. 
+I'd like to develop my skills in R coding further and utilise R to conduct data analysis and to generate plots in future research projects (and to finalise the commissioning of the automated control system). I'm also interested in using R to make it easier and quicker to plot and present untidy data collected by my team to monitor equipment over time. 
 
 # My Data School Experience
 
-I have enjoyed the experience of learning in a supportive and collaborative environment with people so willing to share their skills, the other really wonderful aspect of data school is that it brings together a diverse group of people from across the country and organisation. I have also  appreciated the opportunity to spend dedicated time on learning a skill that will set me up for success as a reasearcher and team leader. 
+I have enjoyed the experience of learning in a supportive and collaborative environment with people so willing to share their skills, the other really wonderful aspect of data school is that it brings together a diverse group of people from across the country and organisation. I have also  appreciated the opportunity to spend dedicated time on learning a skill that will set me up for success as a researcher and team leader. 
 
-# This is a cool plot that I may/may not decide to incorporate
-```{r Process-data-plot, out.width='60%', fig.align='center', fig.height= 4, fig.width=6, fig.cap="Example process plot"}
-ggplot (data=raw_process, 
-        mapping=aes(x= elapsed,
-        y= Sample_Temp)) +
-  geom_point()+
-  geom_hline(aes(yintercept=1097),colour= "red")+
-  geom_hline(aes(yintercept=1103),colour= "red")+
-  ylim(600,1200)+
-  labs(x="Time Elapsed (Seconds)", y="Sample Temperature oC",caption = "Temperature control limits indicated by red lines")
-
-```
